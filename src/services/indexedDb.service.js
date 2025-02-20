@@ -38,6 +38,25 @@ export const openEmployeeDatabase = () => {
 
 // IndexedDB Service (getDataById, getAllData, submitData, deleteData, updateData)
 export const indexedDbService = {
+
+    // FETCH DATA BY ID FROM THE OBJECT STORE
+    getDataById: async (employeeId) => {
+        const db = await openEmployeeDatabase();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(STORE_NAME, 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const index = store.index('employeeId');
+            const request = index.get(employeeId);
+
+            request.onsuccess = () => {
+                resolve(request.result);
+            };
+            request.onerror = (event) => {
+                reject(event.target.error);
+            };
+        });
+    },
+
     // FETCH ALL DATA FROM THE OBJECT STORE
     getAllData: async () => {
         const db = await openEmployeeDatabase();
