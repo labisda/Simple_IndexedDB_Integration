@@ -18,7 +18,10 @@ function App() {
 
 
     // Call indexedDbService.submitData() to handle the form submission
-    const handleSubmit = () => {
+    const handleSubmit = (event) => {
+        
+        // Prevent the default form submission
+        event.preventDefault();
 
         // Validate the form fields
         if (employeeName === '' || team === '') {
@@ -45,7 +48,10 @@ function App() {
 
 
     // Call indexedDbService.updateData() to update the data in Indexed DB
-    const handleUpdate = () => {
+    const handleUpdate = (event) => {
+
+        // Prevent the default form submission
+        event.preventDefault();
 
         // Validate the form fields
         if (employeeId === '' || employeeName === '' || team === '') {
@@ -107,9 +113,9 @@ function App() {
         <div className="flex flex-row items-start justify-center gap-10 mt-20">
             {/* Simple Forms */}
             <div className="border-2 border-gray-300 rounder-sm shadow-sm w-full max-w-[550px] p-5">
-                <h2 className="font-bold text-xl">Simple Form</h2>
+                <h2 className="font-bold text-xl">{ isEditing ? 'Update Employee Form' : 'Employee Form' }</h2>
 
-                <form className="flex flex-col gap-5 mt-5">
+                <form className="flex flex-col gap-5 mt-5" onSubmit={(event) => { isEditing ? handleUpdate(event) : handleSubmit(event); }}>
                     <div hidden={!isEditing}>
                         <label htmlFor="employeeId" className="block mb-2 text-sm font-medium text-gray-900">Employee ID</label>
                         <input type="text" id="employeeId"
@@ -146,14 +152,13 @@ function App() {
                         isEditing ?
                             (
                                 <>
-                                    <button type='button'
-                                        onClick={() => { handleUpdate() }}
+                                    <button type='submit'
                                         className='text-white py-3 rounded bg-blue-600 hover:bg-blue-700 cursor-pointer'>
                                         Update Details
                                     </button>
                                     <button type='button'
                                         onClick={formReset}
-                                        className='text-black py-3 rounded bg-gray-300 hover:bg-gray-400 hover:text-white cursor-pointer'>
+                                        className='text-black py-3 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer'>
                                         Cancel
                                     </button>
                                 </>
@@ -161,8 +166,7 @@ function App() {
                             :
                             (
                                 <button
-                                    type='button'
-                                    onClick={() => { handleSubmit() }}
+                                    type='submit'
                                     className='text-white py-3 rounded bg-blue-600 hover:bg-blue-700 cursor-pointer'>
                                     Submit
                                 </button>
